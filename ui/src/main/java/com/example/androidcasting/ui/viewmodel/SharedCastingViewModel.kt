@@ -15,12 +15,16 @@ import com.example.androidcasting.domain.usecase.ObserveCastingTargetsUseCase
 import com.example.androidcasting.domain.usecase.RefreshMediaLibraryUseCase
 import com.example.androidcasting.domain.usecase.StopCastingUseCase
 import com.example.androidcasting.player.PreviewPlayerManager
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-class SharedCastingViewModel(
+import javax.inject.Inject
+
+@HiltViewModel
+class SharedCastingViewModel @Inject constructor(
     private val getMediaLibraryUseCase: GetMediaLibraryUseCase,
     private val refreshMediaLibraryUseCase: RefreshMediaLibraryUseCase,
     private val observeCastingTargetsUseCase: ObserveCastingTargetsUseCase,
@@ -51,10 +55,6 @@ class SharedCastingViewModel(
         observeDevices()
     }
 
-    fun refreshLibrary() {
-        viewModelScope.launch { refreshMediaLibraryUseCase() }
-    }
-
     private fun observeMediaLibrary() {
         viewModelScope.launch {
             getMediaLibraryUseCase().collect { result ->
@@ -82,14 +82,11 @@ class SharedCastingViewModel(
         previewPlayerManager.preparePreview(mediaItem.uri)
         viewModelScope.launch {
             val codecInfo = analyseCodecUseCase(mediaItem)
-            val enrichedMedia = mediaItem.copy(codecInfo = codecInfo)
-            _selectedMedia.value = enrichedMedia
             _castingState.update { state ->
                 val compatibility = state.selectedTarget?.let { target ->
                     checkCompatibilityUseCase(target.id, codecInfo)
                 } ?: checkCompatibilityUseCase(DEFAULT_TARGET, codecInfo)
                 state.copy(
-                    selectedMedia = enrichedMedia,
                     codecInfo = codecInfo,
                     compatibility = compatibility,
                     warnings = compatibility.reasons
