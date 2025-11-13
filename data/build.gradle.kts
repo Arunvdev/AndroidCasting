@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -28,6 +30,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
     implementation("org.fourthline.cling:cling-core:2.1.2")
     implementation("org.fourthline.cling:cling-support:2.1.2")
-    implementation("org.fourthline.cling:cling-android:2.1.2")
-    implementation("io.insert-koin:koin-android:3.5.3")
+    implementation("com.google.dagger:hilt-android:2.51")
+    kapt("com.google.dagger:hilt-compiler:2.51")
 }
