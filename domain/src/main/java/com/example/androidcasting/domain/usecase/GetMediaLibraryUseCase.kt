@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.map
 class GetMediaLibraryUseCase(private val mediaRepository: MediaRepository) {
     operator fun invoke(): Flow<Result<List<MediaItem>>> =
         mediaRepository.observeMedia()
-            .map<Result<List<MediaItem>>> { mediaItems ->
-                Result.Success<List<MediaItem>>(mediaItems)
+            .map<List<MediaItem>, Result<List<MediaItem>>> { mediaItems ->
+                Result.Success(mediaItems)
             }
-            .catch { throwable -> emit(Result.Error(throwable)) }
+            .catch { emit(Result.Error(it)) }
 }
