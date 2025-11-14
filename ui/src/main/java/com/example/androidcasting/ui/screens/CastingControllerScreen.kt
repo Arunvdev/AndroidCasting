@@ -1,0 +1,49 @@
+package com.example.androidcasting.ui.screens
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
+import com.example.androidcasting.ui.viewmodel.CastingUiState
+
+@Composable
+fun CastingControllerScreen(
+    state: CastingUiState,
+    onBack: () -> Unit,
+    onStopCasting: () -> Unit
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Casting Controller") },
+                navigationIcon = {
+                    IconButton(onClick = onBack) {
+                        Icon(painter = painterResource(android.R.drawable.ic_menu_close_clear_cancel), contentDescription = null)
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        Column(modifier = Modifier.padding(padding).padding(16.dp)) {
+            Text(text = "Media: ${state.selectedMedia?.title ?: \"None\"}")
+            Text(text = "Device: ${state.selectedTarget?.friendlyName ?: \"None\"}")
+            if (state.isCasting) {
+                Text(text = "Casting in progress")
+            }
+            if (state.warnings.isNotEmpty()) {
+                Text(text = state.warnings.joinToString(separator = "\n"))
+            }
+            Button(onClick = onStopCasting, enabled = state.isCasting) {
+                Text(text = "Stop Casting")
+            }
+        }
+    }
+}
