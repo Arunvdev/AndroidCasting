@@ -16,16 +16,6 @@ android {
             isMinifyEnabled = false
         }
     }
-
-    // Keep Java & Kotlin aligned to 1.8
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8.toString()
-    }
 }
 
 dependencies {
