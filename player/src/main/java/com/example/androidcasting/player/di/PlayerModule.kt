@@ -1,9 +1,17 @@
 package com.example.androidcasting.player.di
 
 import com.example.androidcasting.player.PreviewPlayerManager
-import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.module
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-val playerModule = module {
-    single { PreviewPlayerManager(androidContext()) }
+@Module
+@InstallIn(SingletonComponent::class)
+object PlayerModule {
+
+    @Provides
+    @Singleton
+    fun providePreviewPlayerManager(manager: PreviewPlayerManager): PreviewPlayerManager = manager
 }

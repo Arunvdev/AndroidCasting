@@ -4,7 +4,7 @@ A modular Android application template for casting photos, videos, audio and dow
 
 ## Modules
 
-- **app** – Android application entry point hosting the Compose navigation graph and bootstrapping Koin.
+- **app** – Android application entry point hosting the Compose navigation graph and Hilt setup.
 - **core** – Shared utilities such as the local HTTP server, security helpers and result wrappers.
 - **data** – Repository implementations for media scanning, DLNA/UPnP control and codec detection.
 - **domain** – Business logic with use cases, models and repository interfaces.
@@ -21,17 +21,28 @@ A modular Android application template for casting photos, videos, audio and dow
 
 ## Getting Started
 
-1. Install JDK 17 (or let Android Studio manage it), clone the project, and run `gradle assembleDebug` or regenerate the wrapper with `gradle wrapper` before invoking `./gradlew assembleDebug`.
-2. Open the project in Android Studio (Giraffe or newer) and let it sync dependencies (Compose, ExoPlayer, Cling, NanoHTTPD, Coil, Koin, etc.). The Cling libraries resolve directly from Maven Central (v2.1.1), as listed on [Maven Repository](https://mvnrepository.com/artifact/org.fourthline.cling/cling-support/2.1.1), so no extra repository configuration is required.
-3. Deploy to a physical device on the same Wi-Fi as your target TV. The app requests Android 13+ media permissions (or `READ_EXTERNAL_STORAGE` on earlier versions) before scanning files.
-4. Browse the media grid, preview with ExoPlayer, review codec compatibility guidance, then cast via the DLNA transport. If the renderer cannot handle the codecs, enable compatibility mode to stream from the embedded HTTP server.
+1. Open the project in Android Studio (Giraffe or newer).
+2. Sync Gradle to download dependencies (ExoPlayer, Cling, NanoHTTPD, Hilt, Compose, etc.).
+3. Provide the required runtime permissions (storage, Wi-Fi state, multicast) when prompted on device.
+4. Implement the remaining DLNA transport commands inside `DlnaCastingRepository` to complete casting flows.
 
-### Production Notes
+### Verifying the Latest Template Commit
 
-- `DlnaCastingRepository` now issues `SetAVTransportURI`, `Play`, and `Stop` actions against renderers and keeps a multicast lock for stable discovery.
-- The embedded HTTP server streams content directly from `ContentResolver`, supports byte range requests, and generates DLNA metadata so TVs can buffer efficiently.
-- Scoped-storage compliant `MediaStore` queries handle images, videos, audio, and general files while gracefully retrying once permissions are granted.
-- Security-sensitive configuration uses `EncryptedSharedPreferences`, and release builds ship with R8 obfuscation enabled.
+If you cloned this repository but cannot see the most recent scaffolding, confirm that you are on the `work` branch and that the commit `feat: scaffold modular android casting app` (hash `d1f6295`) is present. From the project root you can run:
+
+```bash
+git checkout work
+git pull --ff-only
+git log -1
+```
+
+The final command should show the feature commit mentioned above. If it does not, the branch likely has not been pushed to your remote yet. Push it from your local machine with:
+
+```bash
+git push origin work
+```
+
+After pushing, the updates will be visible on your Git hosting provider and accessible to collaborators.
 
 ## Next Steps
 
