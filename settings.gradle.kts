@@ -11,10 +11,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url = uri("http://4thline.org/m2")
-            isAllowInsecureProtocol = true
-        }
     }
 }
 
