@@ -1,2 +1,10 @@
 # Ignore Gradle wrapper binary to avoid binary diffs in VCS
 gradle/wrapper/gradle-wrapper.jar
+
+# Build outputs
+.gradle/
+build/
+*/build/
+
+# Local configuration
+local.properties
