@@ -1,2 +1,12 @@
-# Ignore Gradle wrapper binary to avoid binary diffs in VCS
+# Gradle build cache and IDE files
+.gradle/
+**/build/
+/local.properties
+.idea/
+.DS_Store
+
+# Kotlin/Java build intermediates
+**/out/
+
+# Ignore the Gradle wrapper binary to avoid committing unsupported artifacts
 gradle/wrapper/gradle-wrapper.jar
