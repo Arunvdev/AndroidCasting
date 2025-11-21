@@ -3,6 +3,7 @@ package com.example.androidcasting.ui.screens
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -14,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.androidcasting.ui.viewmodel.CastingUiState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CastingControllerScreen(
     state: CastingUiState,
@@ -33,8 +35,8 @@ fun CastingControllerScreen(
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding).padding(16.dp)) {
-            Text(text = "Media: ${state.selectedMedia?.title ?: \"None\"}")
-            Text(text = "Device: ${state.selectedTarget?.friendlyName ?: \"None\"}")
+            Text(text = "Media: ${state.selectedMedia?.title ?: "None"}")
+            Text(text = "Device: ${state.selectedTarget?.friendlyName ?: "None"}")
             if (state.isCasting) {
                 Text(text = "Casting in progress")
             }

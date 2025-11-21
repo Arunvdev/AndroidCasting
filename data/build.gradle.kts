@@ -39,8 +39,8 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:1.3.1")
     implementation("androidx.media3:media3-extractor:1.3.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
-    implementation("org.fourthline.cling:cling-core:2.1.2")
-    implementation("org.fourthline.cling:cling-support:2.1.2")
+    implementation("org.jupnp:org.jupnp:2.5.2")
+    implementation("org.jupnp:org.jupnp.support:2.5.2")
     implementation("com.google.dagger:hilt-android:2.51")
     kapt("com.google.dagger:hilt-compiler:2.51")
 }

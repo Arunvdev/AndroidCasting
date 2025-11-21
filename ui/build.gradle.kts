@@ -36,7 +36,7 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":domain"))
-    implementation(project(":player"))
+    api(project(":player"))
     implementation("androidx.core:core-ktx:1.13.1")
     implementation(platform("androidx.compose:compose-bom:2024.05.00"))
     implementation("androidx.compose.ui:ui")
@@ -48,5 +48,6 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.51")
     kapt("com.google.dagger:hilt-compiler:2.51")
     implementation("androidx.media3:media3-ui:1.3.1")
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
     debugImplementation("androidx.compose.ui:ui-tooling")
 }

@@ -35,5 +35,5 @@ dependencies {
     implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("org.nanohttpd:nanohttpd:2.3.1")
+    api("org.nanohttpd:nanohttpd:2.3.1")
 }
