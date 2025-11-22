@@ -33,7 +33,7 @@ android {
 
 dependencies {
     implementation(project(":core"))
-    implementation(project(":domain"))
+    api(project(":domain"))
     implementation("androidx.media3:media3-exoplayer:1.3.1")
     implementation("androidx.media3:media3-ui:1.3.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")

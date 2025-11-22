@@ -1,77 +1,44 @@
 package com.example.androidcasting.data.repository
 
 import android.content.ContentResolver
-import android.provider.MediaStore
+import android.net.Uri
 import com.example.androidcasting.domain.model.MediaItem
 import com.example.androidcasting.domain.model.MediaType
 import com.example.androidcasting.domain.repository.MediaRepository
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.withContext
-import java.util.UUID
 
 /**
- * Scans the device media store for downloadable media. The implementation uses
- * [MediaStore] for compatibility and can be extended to support SAF browsing or
- * custom file pickers.
+ * Placeholder local repository that serves a handful of remote sample items so
+ * UI features like previews and casting flows can be demonstrated without
+ * needing device storage access.
  */
-class LocalMediaRepository(
-    private val contentResolver: ContentResolver,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-) : MediaRepository {
+class LocalMediaRepository(private val contentResolver: ContentResolver) : MediaRepository {
 
-    private val mediaFlow = MutableStateFlow<List<MediaItem>>(emptyList())
+    private val sampleMedia = listOf(
+        MediaItem(
+            uri = Uri.parse("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"),
+            title = "Big Buck Bunny",
+            type = MediaType.VIDEO,
+            thumbnailUri = Uri.parse("https://peach.blender.org/wp-content/uploads/title_anouncement.jpg?x11217")
+        ),
+        MediaItem(
+            uri = Uri.parse("https://sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4"),
+            title = "Sample Clip",
+            type = MediaType.VIDEO,
+            thumbnailUri = Uri.parse("https://via.placeholder.com/800x450.png?text=Sample+Video")
+        ),
+        MediaItem(
+            uri = Uri.parse("https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?w=800"),
+            title = "Sunset",
+            type = MediaType.IMAGE
+        ),
+        MediaItem(
+            uri = Uri.parse("https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?w=800"),
+            title = "City",
+            type = MediaType.IMAGE
+        )
+    )
 
-    override fun observeMedia(): Flow<List<MediaItem>> = mediaFlow.asStateFlow()
+    override suspend fun getMediaLibrary(): List<MediaItem> = sampleMedia
 
-    override suspend fun refresh() {
-        withContext(dispatcher) {
-            val items = mutableListOf<MediaItem>()
-            val projection = arrayOf(
-                MediaStore.MediaColumns._ID,
-                MediaStore.MediaColumns.DATA,
-                MediaStore.MediaColumns.MIME_TYPE,
-                MediaStore.MediaColumns.TITLE,
-                MediaStore.MediaColumns.SIZE,
-                MediaStore.MediaColumns.DURATION
-            )
-
-            contentResolver.query(
-                MediaStore.Files.getContentUri("external"),
-                projection,
-                null,
-                null,
-                MediaStore.MediaColumns.DATE_ADDED + " DESC"
-            )?.use { cursor ->
-                val idIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID)
-                val dataIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA)
-                val mimeIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.MIME_TYPE)
-                val titleIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.TITLE)
-                val sizeIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE)
-                val durationIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DURATION)
-                while (cursor.moveToNext()) {
-                    val mime = cursor.getString(mimeIndex) ?: continue
-                    val type = when {
-                        mime.startsWith("image") -> MediaType.PHOTO
-                        mime.startsWith("video") -> MediaType.VIDEO
-                        mime.startsWith("audio") -> MediaType.AUDIO
-                        else -> MediaType.FILE
-                    }
-                    items += MediaItem(
-                        id = cursor.getString(idIndex) ?: UUID.randomUUID().toString(),
-                        uri = cursor.getString(dataIndex),
-                        mimeType = mime,
-                        title = cursor.getString(titleIndex) ?: "Unknown",
-                        type = type,
-                        durationMillis = cursor.getLong(durationIndex),
-                        sizeBytes = cursor.getLong(sizeIndex)
-                    )
-                }
-            }
-            mediaFlow.value = items
-        }
-    }
+    override suspend fun refreshMediaLibrary(): List<MediaItem> = sampleMedia
 }

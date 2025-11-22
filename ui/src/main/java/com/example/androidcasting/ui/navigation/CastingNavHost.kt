@@ -3,80 +3,63 @@ package com.example.androidcasting.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.androidcasting.ui.screens.CastingControllerScreen
+import com.example.androidcasting.player.PreviewPlayerManager
+import com.example.androidcasting.ui.screens.MediaBrowserScreen
+import com.example.androidcasting.ui.screens.MediaPreviewScreen
 import com.example.androidcasting.ui.screens.DeviceListScreen
 import com.example.androidcasting.ui.screens.HomeScreen
-import com.example.androidcasting.ui.screens.MediaBrowserScreen
-import com.example.androidcasting.ui.screens.PlayerPreviewScreen
 import com.example.androidcasting.ui.viewmodel.SharedCastingViewModel
-
-sealed class Screen(val route: String) {
-    data object Home : Screen("home")
-    data object Browser : Screen("browser")
-    data object Devices : Screen("devices")
-    data object Preview : Screen("preview")
-    data object Controller : Screen("controller")
-}
 
 @Composable
 fun CastingNavHost(
     viewModel: SharedCastingViewModel,
-    navController: NavHostController = rememberNavController()
+    previewPlayerManager: PreviewPlayerManager
 ) {
-    NavHost(navController = navController, startDestination = Screen.Home.route) {
-        composable(Screen.Home.route) {
+    val navController = rememberNavController()
+    val uiState by viewModel.uiState.collectAsState()
+
+    NavHost(navController = navController, startDestination = "home") {
+        composable("home") {
             HomeScreen(
-                onBrowseClick = { navController.navigate(Screen.Browser.route) },
-                onDevicesClick = { navController.navigate(Screen.Devices.route) }
+                onBrowseClick = { navController.navigate("mediaBrowser") },
+                onDevicesClick = { navController.navigate("devices") }
             )
         }
-        composable(Screen.Browser.route) {
-            val media by viewModel.media.collectAsState()
+        composable("mediaBrowser") {
             MediaBrowserScreen(
-                media = media,
+                media = uiState.media,
                 onBack = { navController.popBackStack() },
                 onPreview = {
                     viewModel.selectMedia(it)
-                    navController.navigate(Screen.Preview.route)
+                    navController.navigate("preview")
                 }
             )
         }
-        composable(Screen.Devices.route) {
-            val devices by viewModel.devices.collectAsState()
+        composable("preview") {
+            val selected = uiState.selectedMedia
+            if (selected != null) {
+                MediaPreviewScreen(
+                    mediaItem = selected,
+                    selectedTargetName = uiState.selectedTarget?.friendlyName,
+                    onBack = { navController.popBackStack() },
+                    onCast = {
+                        viewModel.startCasting { navController.popBackStack("home", inclusive = false) }
+                    },
+                    onSelectTarget = { navController.navigate("devices") }
+                )
+            }
+        }
+        composable("devices") {
             DeviceListScreen(
-                devices = devices,
+                devices = uiState.availableTargets,
                 onBack = { navController.popBackStack() },
                 onDeviceSelected = {
                     viewModel.selectTarget(it)
-                    navController.navigate(Screen.Controller.route)
+                    navController.popBackStack()
                 }
-            )
-        }
-        composable(Screen.Preview.route) {
-            val selected by viewModel.selectedMedia.collectAsState()
-            val state by viewModel.castingState.collectAsState()
-            PlayerPreviewScreen(
-                mediaItem = selected,
-                compatibility = state.compatibility,
-                warnings = state.warnings,
-                player = viewModel.previewPlayer,
-                onBack = { navController.popBackStack() },
-                onCast = {
-                    viewModel.prepareCasting()
-                    navController.navigate(Screen.Controller.route)
-                }
-            )
-        }
-        composable(Screen.Controller.route) {
-            val castingState by viewModel.castingState.collectAsState()
-            CastingControllerScreen(
-                state = castingState,
-                onBack = { navController.popBackStack(Screen.Home.route, inclusive = false) },
-                onStopCasting = { viewModel.stopCasting() }
             )
         }
     }

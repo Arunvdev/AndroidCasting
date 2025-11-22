@@ -1,24 +1,20 @@
 package com.example.androidcasting.domain.model
 
+import android.net.Uri
+
+/**
+ * Represents a piece of local media. [thumbnailUri] can point to a still image
+ * so that lists and previews can render quickly even for videos.
+ */
 data class MediaItem(
-    val id: String,
-    val uri: String,
-    val mimeType: String,
+    val uri: Uri,
     val title: String,
     val type: MediaType,
-    val durationMillis: Long = 0L,
-    val sizeBytes: Long = 0L,
-    val codecInfo: CodecInfo? = null
+    val thumbnailUri: Uri = uri
 )
 
-data class CodecInfo(
-    val videoCodec: String?,
-    val audioCodec: String?,
-    val bitrate: Long?,
-    val container: String?,
-    val width: Int?,
-    val height: Int?,
-    val frameRate: Float?
-)
-
-enum class MediaType { PHOTO, VIDEO, AUDIO, FILE }
+enum class MediaType {
+    IMAGE,
+    VIDEO,
+    AUDIO
+}
