@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.androidcasting.player.PreviewPlayerManager
 import com.example.androidcasting.ui.screens.MediaBrowserScreen
 import com.example.androidcasting.ui.screens.MediaPreviewScreen
 import com.example.androidcasting.ui.screens.DeviceListScreen
@@ -13,7 +14,10 @@ import com.example.androidcasting.ui.screens.HomeScreen
 import com.example.androidcasting.ui.viewmodel.SharedCastingViewModel
 
 @Composable
-fun CastingNavHost(viewModel: SharedCastingViewModel) {
+fun CastingNavHost(
+    viewModel: SharedCastingViewModel,
+    previewPlayerManager: PreviewPlayerManager
+) {
     val navController = rememberNavController()
     val uiState by viewModel.uiState.collectAsState()
 
