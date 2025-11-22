@@ -8,5 +8,4 @@
 # Kotlin/Java build intermediates
 **/out/
 
-# Ignore the Gradle wrapper binary to avoid committing unsupported artifacts
-gradle/wrapper/gradle-wrapper.jar
+/gradle/wrapper/gradle-wrapper.jar

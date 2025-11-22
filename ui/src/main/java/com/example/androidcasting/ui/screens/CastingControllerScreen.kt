@@ -35,8 +35,11 @@ fun CastingControllerScreen(
         }
     ) { padding ->
         Column(modifier = Modifier.padding(padding).padding(16.dp)) {
-            Text(text = "Media: ${state.selectedMedia?.title ?: "None"}")
-            Text(text = "Device: ${state.selectedTarget?.friendlyName ?: "None"}")
+            val mediaTitle = state.selectedMedia?.title ?: "None"
+            val deviceName = state.selectedTarget?.friendlyName ?: "None"
+
+            Text(text = "Media: $mediaTitle")
+            Text(text = "Device: $deviceName")
             if (state.isCasting) {
                 Text(text = "Casting in progress")
             }
