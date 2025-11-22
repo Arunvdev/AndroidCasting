@@ -8,6 +8,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import com.example.androidcasting.ui.navigation.CastingNavHost
 import com.example.androidcasting.ui.theme.AndroidCastingTheme
 import com.example.androidcasting.ui.viewmodel.SharedCastingViewModel
+import com.example.androidcasting.player.PreviewPlayerManager
+import javax.inject.Inject
 
 /**
  * Hosts the Compose based navigation flow. The shared [SharedCastingViewModel]
@@ -17,12 +19,16 @@ import com.example.androidcasting.ui.viewmodel.SharedCastingViewModel
 class MainActivity : ComponentActivity() {
 
     private val viewModel: SharedCastingViewModel by viewModels()
+    @Inject lateinit var previewPlayerManager: PreviewPlayerManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AndroidCastingTheme {
-                CastingNavHost(viewModel = viewModel)
+                CastingNavHost(
+                    viewModel = viewModel,
+                    previewPlayerManager = previewPlayerManager
+                )
             }
         }
     }

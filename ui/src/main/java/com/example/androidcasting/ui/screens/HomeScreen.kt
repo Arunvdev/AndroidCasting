@@ -14,8 +14,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun HomeScreen(
+    isCasting: Boolean,
+    selectedMediaTitle: String?,
+    selectedTargetName: String?,
     onBrowseClick: () -> Unit,
-    onDevicesClick: () -> Unit
+    onDevicesClick: () -> Unit,
+    onStopCasting: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -28,6 +32,15 @@ fun HomeScreen(
             text = "Cast your photos, videos, audio and downloads",
             textAlign = TextAlign.Center
         )
+        if (isCasting && selectedMediaTitle != null && selectedTargetName != null) {
+            Text(
+                text = "Casting \"$selectedMediaTitle\" to $selectedTargetName",
+                textAlign = TextAlign.Center
+            )
+            Button(onClick = onStopCasting) {
+                Text(text = "Stop Casting")
+            }
+        }
         Button(onClick = onBrowseClick) {
             Text(text = "Browse Media")
         }
