@@ -24,12 +24,8 @@ fun CastingNavHost(
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
             HomeScreen(
-                isCasting = uiState.isCasting,
-                selectedMediaTitle = uiState.selectedMedia?.title,
-                selectedTargetName = uiState.selectedTarget?.friendlyName,
                 onBrowseClick = { navController.navigate("mediaBrowser") },
-                onDevicesClick = { navController.navigate("devices") },
-                onStopCasting = viewModel::stopCasting
+                onDevicesClick = { navController.navigate("devices") }
             )
         }
         composable("mediaBrowser") {
@@ -48,7 +44,6 @@ fun CastingNavHost(
                 MediaPreviewScreen(
                     mediaItem = selected,
                     selectedTargetName = uiState.selectedTarget?.friendlyName,
-                    previewPlayerManager = previewPlayerManager,
                     onBack = { navController.popBackStack() },
                     onCast = {
                         viewModel.startCasting { navController.popBackStack("home", inclusive = false) }
